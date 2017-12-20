@@ -5,7 +5,7 @@ The SWAGAPI is based in some concepts:
 	- Blueprints with commom functions for apis to speed up
 	- Keep some control of the modules with some predefined ones
 	- Use a simple ROUTES+LIBRARIES+MIDDLEWARE+BOOT concept to make everything.
-
+  
 
 ROUTES
 -----------------------------------------------------------------------
