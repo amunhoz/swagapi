@@ -6,6 +6,11 @@ module.exports = {
     run: async function (appExpress) {
         var mm = require('micromatch');
         let nroutes = appExpress._router.stack.length;
+        
+        if (!fs.existsSync(app.config.locations.permissions)){
+            return console.log("       --> Permissions NOT loaded, config file not found.");
+        }
+        
         var pconfig = hjson.readFileSync(app.config.locations.permissions);
         var removePath = appExpress.mountpath;
         for (var i = 0; i < nroutes; i++) {

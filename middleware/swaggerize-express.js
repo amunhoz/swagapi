@@ -4,7 +4,13 @@ const path = require("path");
 module.exports = {
   name: "swaggerize-express",
   run: async function (appExpress) {
-        
+
+        if (!fs.existsSync(app.config.locations.swaggerFile)){
+            return console.log("       --> Swaggerize NOT loaded, swagger file not found.");
+        }
+        if (!fs.existsSync(app.config.locations.routesApi)){
+            return console.log("       --> Swaggerize NOT loaded, api routes dir not found.");
+        }
 		
 		// set options
 		var opt = {
@@ -18,7 +24,9 @@ module.exports = {
 		};
         
         const requireDir = require('require-dir');
-        swagapi.security = await requireDir(app.config.locations.security, { recurse: true });
+        if (fs.existsSync(app.config.locations.security))
+            swagapi.security = await requireDir(app.config.locations.security, { recurse: true });
+        
 
         try {
             appExpress.use(swaggerize(opt));
