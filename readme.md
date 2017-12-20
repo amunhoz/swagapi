@@ -151,10 +151,10 @@ Has the functions: create, update, delete, find, count and findOne
 
 	module.exports = {
 		post: async function (req, res) {
-			swagapi.lib.blueprints.create({ req: req, res: res, modelName: "tag" });
+			swagapi.swagapi.lib.blueprints.create({ req: req, res: res, modelName: "tag" });
 		},
 		get: async function (req, res) {
-			swagapi.lib.blueprints.find({ req: req, res: res, modelName: "tag" });
+			swagapi.swagapi.lib.blueprints.find({ req: req, res: res, modelName: "tag" });
 		}
 
 	};
