@@ -1,5 +1,6 @@
 ﻿var path = require('path');
 var requireDir = require('require-dir');
+const fs = require('fs');
 
 module.exports = {
   name: "api-init",
