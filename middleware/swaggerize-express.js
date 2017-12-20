@@ -1,5 +1,6 @@
 ﻿const swaggerize = require('swaggerize-express');
 const path = require("path");
+var fs = require('fs');
 
 module.exports = {
   name: "swaggerize-express",

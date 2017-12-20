@@ -1,5 +1,6 @@
 ﻿const hjson = require('hjsonfile');
 const matcher = require('matcher');
+const fs = require('fs');
 
 module.exports = {
     name: "permissions",
