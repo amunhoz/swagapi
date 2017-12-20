@@ -28,7 +28,7 @@ module.exports = {
         global.sysLog = new (winston.Logger)({
             transports: transports
         });
-        swapi.sysLog = global.sysLog;
+        swagapi.sysLog = global.sysLog;
 
     }
 }

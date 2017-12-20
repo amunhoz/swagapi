@@ -5,7 +5,7 @@ module.exports = {
     run: async function () {
 		var cacheManager = require('cache-manager');
 		let options = app.config.modules["cache-manager"].options;
-        swapi.cache = cacheManager.caching(options);
+        swagapi.cache = cacheManager.caching(options);
     }
 }
 

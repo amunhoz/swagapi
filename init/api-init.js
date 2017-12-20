@@ -9,7 +9,7 @@ module.exports = {
       
       app.security = await requireDir(app.config.locations.security);
       
-      var bootFiles = new swapi.lib.bootDir();
+      var bootFiles = new swagapi.lib.bootDir();
       
       console.log("               (init) Loading app init...");
       await bootFiles.start({}, path.resolve(app.config.locations.init));

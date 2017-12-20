@@ -20,12 +20,12 @@ exports.start = function (apiFile) {
 };
 
 async function init (apiFile) {
-    console.log("(sys) Loading swapi with " + apiFile); 
+    console.log("(sys) Loading SWAGAPI with " + apiFile); 
     
     //creating global interface
-    global.swapi = {}
+    global.swagapi = {}
     global.app = {}
-    swapi.express = [];
+    swagapi.express = [];
 
     //deal with errors globbaly
     
@@ -33,7 +33,6 @@ async function init (apiFile) {
 
     let apiDir = path.dirname(apiFile); 
     app.config.baseDir = path.resolve(apiDir, app.config.baseDir);
-    app.config.swapiDir = path.resolve(__dirname);
 
     //fill properly locations
     Object.keys(app.config.locations).forEach(function (key) {
@@ -45,24 +44,24 @@ async function init (apiFile) {
 
     //load libraries
     var requireDir = require('require-dir');
-    swapi.lib = {};
-    swapi.lib = await requireDir(path.resolve(__dirname, "./lib") , { recurse: true });
-    swapi.classes = await requireDir(path.resolve(__dirname, "./classes"), { recurse: true });
+    swagapi.lib = {};
+    swagapi.lib = await requireDir(path.resolve(__dirname, "./lib") , { recurse: true });
+    swagapi.classes = await requireDir(path.resolve(__dirname, "./classes"), { recurse: true });
     console.log("(sys) Loading libraries and classes done.");
 
 
     //load boot services
-    var bootFiles = new swapi.lib.bootDir();
+    var bootFiles = new swagapi.lib.bootDir();
     app.config.modules = hjson.readFileSync(app.config.locations.initFile);
 
     console.log("========================================================================");
-    console.log("(sys) Loading swapi init...");
+    console.log("(sys) Loading SWAGAPI init...");
     console.log("========================================================================");
     await bootFiles.start(app, 
                         path.resolve(__dirname, "./init"), 
                         app.config.modules );
     
-    console.log("-> (sys) Loading swapi init done.");
+    console.log("-> (sys) Loading SWAGAPI init done.");
    
    
 }
@@ -73,10 +72,10 @@ async function startExpress() {
 	const appExpress = express();
 	var server = http.createServer(appExpress);
     
-    swapi.express = appExpress;
+    swagapi.express = appExpress;
 
 	//load boot services
-    var bootFiles = new swapi.lib.bootDir();
+    var bootFiles = new swagapi.lib.bootDir();
     app.config.modules = hjson.readFileSync(app.config.locations.middlewareFile);
 
     console.log("------------------------------------------------------------------------");
@@ -86,7 +85,7 @@ async function startExpress() {
     await bootFiles.start(  appExpress, 
                             path.resolve(__dirname, "./middleware"), 
                             app.config.modules );
-    console.log("-> (sys) Loading swapi middleware done.");
+    console.log("-> (sys) Loading SWAGAPI middleware done.");
     
     
 	//start express	

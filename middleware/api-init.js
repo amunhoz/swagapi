@@ -10,10 +10,10 @@ module.exports = {
         next();
     })
     
-    var bootFiles = new swapi.lib.bootDir();
+    var bootFiles = new swagapi.lib.bootDir();
     
     console.log("               (mid) Loading app middleware...");
-    var midFiles = new swapi.lib.bootDir();
+    var midFiles = new swagapi.lib.bootDir();
     await midFiles.start(appExpress, path.resolve(app.config.locations.middleware));
 
    

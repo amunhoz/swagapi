@@ -18,7 +18,7 @@ module.exports = {
 		};
         
         const requireDir = require('require-dir');
-        swapi.security = swapi.lib = await requireDir(app.config.locations.security, { recurse: true });
+        swagapi.security = swagapi.lib = await requireDir(app.config.locations.security, { recurse: true });
 
         try {
             appExpress.use(swaggerize(opt));

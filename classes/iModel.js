@@ -17,11 +17,11 @@ iModel.prototype.find = async function (pcriteria, ctx) {
     var criteria = pcriteria.cloneMe()
     if(!ctx) ctx = {};
     //emitting event BEFORE
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.model = this.model
         ctx.criteria = criteria
         ctx.cancel == false;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "before", "find", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "before", "find", ctx);
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
      
@@ -57,9 +57,9 @@ iModel.prototype.find = async function (pcriteria, ctx) {
     var result = await promisefyQueryExec(query);
 
     //emitting event AFTER
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.result = result;
-        swapi.lib.blueHelper.emitEvent(ctx.modelName, "after", "find", ctx);
+        swagapi.lib.blueHelper.emitEvent(ctx.modelName, "after", "find", ctx);
     }
 
     return result;
@@ -72,11 +72,11 @@ iModel.prototype.count = async function (pcriteria, ctx) {
     if(!ctx) ctx = {};
     var criteria = pcriteria.cloneMe()
     //emitting event BEFORE
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.model = this.model
         ctx.criteria = criteria
         ctx.cancel == false;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "before", "find", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "before", "find", ctx);
         if (ctx.cancel == true) return false;//if any other middleware has ended it
         
     }
@@ -84,9 +84,9 @@ iModel.prototype.count = async function (pcriteria, ctx) {
     var result = await this.model.count(criteria);
 
     //emitting event AFTER
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.result = result;
-        swapi.lib.blueHelper.emitEvent(ctx.modelName, "after", "find", ctx);
+        swagapi.lib.blueHelper.emitEvent(ctx.modelName, "after", "find", ctx);
         
     }
 
@@ -109,11 +109,11 @@ iModel.prototype.findOne = async function (idOrCriteria, ctx) {
     }
 
     //emitting event BEFORE
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.model = this.model
         ctx.criteria = criteria
         ctx.cancel == false;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "before", "find", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "before", "find", ctx);
         
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
@@ -123,9 +123,9 @@ iModel.prototype.findOne = async function (idOrCriteria, ctx) {
     var result = await promisefyQueryExec(query);
 
     //emitting event AFTER
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.result = result;
-        swapi.lib.blueHelper.emitEvent(ctx.modelName, "after", "find", ctx);
+        swagapi.lib.blueHelper.emitEvent(ctx.modelName, "after", "find", ctx);
         
     }
     if (result && result[0]) return result[0];
@@ -148,21 +148,21 @@ iModel.prototype.update = async function (idOrCriteria, data, ctx) {
     }
 
     //emitting event BEFORE
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.model = this.model
         ctx.criteria = criteria
         ctx.data = data
         ctx.cancel == false;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "before", "update", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "before", "update", ctx);
         
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
 
     var result = await this.model.update(criteria, data);
     //emitting event AFTER
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.result = result;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "after", "update", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "after", "update", ctx);
         
     }
 
@@ -177,20 +177,20 @@ iModel.prototype.create = async function (data, ctx) {
     if(!ctx) ctx = {};
     
     //emitting event BEFORE
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.model = this.model
         ctx.data = data
         ctx.cancel == false;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "before", "create", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "before", "create", ctx);
         
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
 
     var result = await this.model.create(data);
     //emitting event AFTER
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.result = result
-        swapi.lib.blueHelper.emitEvent(this.modelName, "after", "create", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "after", "create", ctx);
         
     }
 
@@ -214,11 +214,11 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
     }
 
     //emitting event BEFORE
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.model = this.model
         ctx.criteria = criteria
         ctx.cancel == false;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "before", "delete", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "before", "delete", ctx);
         
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
@@ -226,9 +226,9 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
     var result = await this.model.destroy(criteria.where);
     
     //emitting event AFTER
-    if (swapi.events && this.useEvents) {
+    if (swagapi.events && this.useEvents) {
         ctx.result = result;
-        swapi.lib.blueHelper.emitEvent(this.modelName, "after", "delete", ctx);
+        swagapi.lib.blueHelper.emitEvent(this.modelName, "after", "delete", ctx);
         
     }
     //if (byId = true && result[0]) result = result[0]

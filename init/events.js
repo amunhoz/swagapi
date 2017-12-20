@@ -5,7 +5,7 @@ module.exports = {
 	  
 	  // Create an eventEmitter object
 		var EventEmitter2 = require('eventemitter2').EventEmitter2;
-		swapi.events = new EventEmitter2({
+		swagapi.events = new EventEmitter2({
 				wildcard: true,
 				delimiter: '.', 
 				maxListeners: 20,

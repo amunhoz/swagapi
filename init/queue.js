@@ -5,9 +5,9 @@ module.exports = {
     run: async function () {
         var queue = require('queue');
 
-        swapi.queue = queue();
-        swapi.queue.concurrency = app.config.modules.queue.config.concurrency;
-        swapi.queue.autostart = true;
+        swagapi.queue = queue();
+        swagapi.queue.concurrency = app.config.modules.queue.config.concurrency;
+        swagapi.queue.autostart = true;
 
     }
 }

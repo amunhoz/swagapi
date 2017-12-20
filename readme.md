@@ -1,5 +1,5 @@
-SWAPI is a boilerplate to reduce programming time for node APIs using some shortcuts to make life easier.
-The Swapi is based in some concepts:
+SWAGAPI is a boilerplate to reduce programming time for node APIs using some shortcuts to make life easier.
+The SWAGAPI is based in some concepts:
 	- Use directory structure for routes as possible to make easier to read the code
 	- A event structure to customize behaviours without complexity
 	- Blueprints with commom functions for apis to speed up
@@ -39,7 +39,7 @@ Using only js files
 	2. Use the follow structure
 
 		var router = require('express').Router();
-		router.get('/', swapi.security.apikey, function(req, res, next) {
+		router.get('/', swagapi.security.apikey, function(req, res, next) {
 				//code for get
 		});
 
@@ -69,8 +69,8 @@ View events
 MODELS - Use Waterline documentation
 -----------------------------------------------------------------------
 You can acces models from 
-	swapi.models  	- Waterline models
-	swapi.imodels	- custom interface with event trigger
+	swagapi.models  	- Waterline models
+	swagapi.imodels	- custom interface with event trigger
 	
 Models events
 
@@ -112,7 +112,7 @@ Follow the structure:
 	
 LIB - Auto load libraries from /app/lib
 -----------------------------------------------------------------------
-All libs will be loaded into swapi.lib.YourLibName.YourFunction();
+All libs will be loaded into swagapi.lib.YourLibName.YourFunction();
 Follow the structure:	
 
 	function myLib() {
@@ -137,14 +137,14 @@ Has the functions: create, update, delete, find, count and findOne
 
 	module.exports = {
 		post: async function (req, res) {
-			swapi.lib.blueprints.create({ req: req, res: res, modelName: "tag" });
+			swagapi.lib.blueprints.create({ req: req, res: res, modelName: "tag" });
 		},
 		get: async function (req, res) {
-			swapi.lib.blueprints.find({ req: req, res: res, modelName: "tag" });
+			swagapi.lib.blueprints.find({ req: req, res: res, modelName: "tag" });
 		}
 
 	};
-You can check additional parameters inside the code in \swapi\lib\blueprints\[operation].js
+You can check additional parameters inside the code in \SWAGAPI\lib\blueprints\[operation].js
 	 
 	
 	

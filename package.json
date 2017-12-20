@@ -1,7 +1,7 @@
 {
   "name": "swagapi",
   "version": "0.3.0",
-  "description": "Swapi framework",
+  "description": "SWAGAPI framework",
   "main": "index.js",
   "author": "A. Munhoz (Brazil)",
   "license": "MIT",

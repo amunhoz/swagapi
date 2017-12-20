@@ -4,7 +4,7 @@ module.exports = {
     name: "schedule",
     run: async function () {
 
-        swapi.schedule = require('node-schedule');
+        swagapi.schedule = require('node-schedule');
 
     }
 }

@@ -34,10 +34,10 @@ module.exports = {
         //creating model interfaces
         app.models = {};
         for (item in app._models) {
-            app.models[item] = new swapi.classes.iModel(item);
+            app.models[item] = new swagapi.classes.iModel(item);
         }
         
-        swapi.waterline = orm;
+        swagapi.waterline = orm;
 
     }
 };
