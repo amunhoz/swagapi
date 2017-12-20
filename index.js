@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const hjson = require('hjsonfile');
 const fs = require('fs');
-
 const sync = require('promise-synchronizer')
 
 exports.start = function (apiFile) {
@@ -15,7 +14,7 @@ exports.start = function (apiFile) {
     }
     catch (ex) {
         //error
-        console.error(ex);
+        console.error(JSON.stringify(ex));
     }
 };
 
@@ -38,7 +37,8 @@ async function init (apiFile) {
     Object.keys(app.config.locations).forEach(function (key) {
         app.config.locations[key] = path.resolve(app.config.baseDir, app.config.locations[key]);
         if (!fs.existsSync(app.config.locations[key])) {
-            fs.mkdirSync(app.config.locations[key], 0744);
+            if (!path.extname(app.config.locations[key]))
+                fs.mkdirSync(app.config.locations[key], 0744);
         }
     });
 
