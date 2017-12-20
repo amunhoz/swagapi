@@ -4,13 +4,14 @@ The SWAGAPI is based in some concepts:
 	- A event structure to customize behaviours without complexity
 	- Blueprints with commom functions for apis to speed up
 	- Keep some control of the modules with some predefined ones
-	- Use a simple ROUTES+LIBRARIES+INITIAL_CODE concept to make everything.
+	- Use a simple ROUTES+LIBRARIES+MIDDLEWARE+BOOT concept to make everything.
+
 
 ROUTES
 -----------------------------------------------------------------------
 Using swagger
 	1. Create a swagger file and put in /app/config
-	2. Configure api.hjon with the correct name
+	2. Configure api.jon with the correct information
 	3. Put the files for your route in /app/routesApi with a method for each request type
 
 		module.exports = {
@@ -22,7 +23,8 @@ Using swagger
 			}
 		};
 	4. Security policy - Just put a file with the same name of policy inside /app/security
-	5. Use the example code above:
+	
+	5. Use the example code above for security policy:
 		
 		async function authorize(req, res, next) {
 			 if (true) {
@@ -104,11 +106,24 @@ Follow the structure:
 		priority: 999,	// priority among others
 		enabled: true,	// you can enable/disable
 		name: "Tests",  // avoid same name of others
-		run: async function (app) {
+		run: async function () {
 			console.log(" your code here");
 		}
 	}
 	
+Middleware - Run every script in /app/middleware at start
+-----------------------------------------------------------------------
+Put the file there with the proper config and it will run at app start express
+Follow the structure:	
+
+	module.exports = {
+		priority: 999,	// priority among others
+		enabled: true,	// you can enable/disable
+		name: "Tests",  // avoid same name of others
+		run: async function (appExpress) {
+			console.log(" your code here");
+		}
+	}
 	
 LIB - Auto load libraries from /app/lib
 -----------------------------------------------------------------------
@@ -127,8 +142,7 @@ Follow the structure:
 PUBLIC - Serve your static content
 -----------------------------------------------------------------------
 Just put inside /app/public
-	
-	
+		
 	
 	
 BLUEPRINTS - Deal with request complexity in a easy way
@@ -137,10 +151,10 @@ Has the functions: create, update, delete, find, count and findOne
 
 	module.exports = {
 		post: async function (req, res) {
-			swagapi.lib.blueprints.create({ req: req, res: res, modelName: "tag" });
+			swagapi.swagapi.lib.blueprints.create({ req: req, res: res, modelName: "tag" });
 		},
 		get: async function (req, res) {
-			swagapi.lib.blueprints.find({ req: req, res: res, modelName: "tag" });
+			swagapi.swagapi.lib.blueprints.find({ req: req, res: res, modelName: "tag" });
 		}
 
 	};

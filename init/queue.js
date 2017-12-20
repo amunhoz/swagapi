@@ -6,7 +6,7 @@ module.exports = {
         var queue = require('queue');
 
         swagapi.queue = queue();
-        swagapi.queue.concurrency = app.config.modules.queue.config.concurrency;
+        swagapi.queue.concurrency = app.config.init.queue.config.concurrency;
         swagapi.queue.autostart = true;
 
     }

@@ -5,7 +5,14 @@ var fs = require('fs');
 module.exports = {
     name: "waterline",
     run: async function () {
+        if (!fs.existsSync(app.config.locations.models)){
+            return console.log("       --> Waterline NOT loaded, models folder not found.");
+        }
 
+        if (!fs.existsSync(app.config.locations.connections)){
+            return console.log("       --> Waterline NOT loaded, connections file not found.");
+        }
+        
 
         var orm = new waterline();
         let config = require(app.config.locations.connections); //ERROR
