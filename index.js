@@ -3,18 +3,17 @@ const express = require('express');
 const path = require('path');
 const hjson = require('hjsonfile');
 const fs = require('fs');
-const sync = require('promise-synchronizer')
 
-exports.start = function (apiFile) {
+exports.start =async function (apiFile) {
     //deal with errors globbaly
     try {
        //start system
-       sync(init(apiFile))
-       sync(startExpress());
+       await init(apiFile)
+       await startExpress();
     }
     catch (ex) {
         //error
-        console.error(JSON.stringify(ex));
+        console.error(ex);
     }
 };
 
@@ -46,21 +45,28 @@ async function init (apiFile) {
     console.log("(sys) Loading libraries and classes done.");
 
 
-    //load boot services
-    var bootFiles = new swagapi.lib.bootDir();
+    
+    
     if (fs.existsSync(app.config.locations.initFile)) 
-        app.config.modules = hjson.readFileSync(app.config.locations.initFile);
+        app.config.init = hjson.readFileSync(app.config.locations.initFile);
     else 
         throw new Error("Config file for init not found!")
+
 
     console.log("========================================================================");
     console.log("(sys) Loading SWAGAPI init...");
     console.log("========================================================================");
-    await bootFiles.start(app, 
-                        path.resolve(__dirname, "./init"), 
-                        app.config.modules );
+    
+    //load boot services
+    var bootFiles = new swagapi.lib.bootDir();
+    await bootFiles.loadDir(path.resolve(__dirname, "./init"), app.config.init);
+    if (fs.existsSync(app.config.locations.init))
+        await bootFiles.loadDir(path.resolve(app.config.locations.init));
+    
+    await bootFiles.initialize();
     
     console.log("-> (sys) Loading SWAGAPI init done.");
+   
    
 }
 
@@ -72,30 +78,31 @@ async function startExpress() {
     
     swagapi.express = appExpress;
 
+	//load boot services
+    var bootFiles = new swagapi.lib.bootDir();
+    if (fs.existsSync(app.config.locations.middlewareFile)) 
+        app.config.middleware = hjson.readFileSync(app.config.locations.middlewareFile);
+    else 
+        throw new Error("Config file for Middleware not found!")
 
     console.log("------------------------------------------------------------------------");
     console.log("(sys) Loading server process");
     console.log("------------------------------------------------------------------------");
+    
 
     //load boot services
     var bootFiles = new swagapi.lib.bootDir();
-    if (fs.existsSync(app.config.locations.middlewareFile)) 
-        app.config.modules = hjson.readFileSync(app.config.locations.middlewareFile);
-    else 
-        throw new Error("Config file for Middleware not found!")
+    await bootFiles.loadDir(path.resolve(__dirname, "./middleware"), app.config.middleware);
+    if (fs.existsSync(app.config.locations.middleware))
+        await bootFiles.loadDir(path.resolve(app.config.locations.middleware));    
+    await bootFiles.initialize(appExpress);
 
-    if (fs.existsSync(app.config.locations.middleware)) {
-            await bootFiles.start( appExpress, 
-                app.config.locations.middleware, 
-                            app.config.modules );
-    } 
-    else console.log("               - (init) No middleware folder on app...")
-    
     console.log("-> (sys) Loading SWAGAPI middleware done.");
     
     
 	//start express	
     server.listen(app.config.port, function () {
+
         console.log('=> (sys) ' + app.config.name + ' listening on port ' + app.config.port + " <=");
 		app.config.host = server.address().address;
     });

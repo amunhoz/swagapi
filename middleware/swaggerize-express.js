@@ -17,6 +17,8 @@ module.exports = {
 		  docspath: '/api-docs'
 		};
         
+        const requireDir = require('require-dir');
+        swagapi.security = await requireDir(app.config.locations.security, { recurse: true });
 
         try {
             appExpress.use(swaggerize(opt));
