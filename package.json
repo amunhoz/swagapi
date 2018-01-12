@@ -9,6 +9,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "app-root-dir": "^1.0.2",
     "body-parser": "^1.17.2",
     "cache-manager": "^2.4.0",
     "clone": "^2.1.1",
