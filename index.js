@@ -4,12 +4,13 @@ const path = require('path');
 const hjson = require('hjsonfile');
 const fs = require('fs');
 
-exports.start =async function (apiFile) {
+exports.start = async function (apiFile) {
     //deal with errors globbaly
     try {
        //start system
-       await init(apiFile)
-       await startExpress();
+       await boot(apiFile)
+       await loadExpress();
+       await listen();
     }
     catch (ex) {
         //error
@@ -17,7 +18,7 @@ exports.start =async function (apiFile) {
     }
 };
 
-async function init (apiFile) {
+async function boot (apiFile) {
     console.log("(sys) Loading SWAGAPI with " + apiFile); 
     
     //creating global interface
@@ -31,6 +32,8 @@ async function init (apiFile) {
 
     let apiDir = path.dirname(apiFile); 
     app.config.baseDir = path.resolve(apiDir, app.config.baseDir);
+    app.config.appDir = require('app-root-dir').get();
+
 
     //fill properly locations
     Object.keys(app.config.locations).forEach(function (key) {
@@ -72,7 +75,7 @@ async function init (apiFile) {
 
 
 
-async function startExpress() {
+async function loadExpress() {
 	const appExpress = express();
 	var server = http.createServer(appExpress);
     
@@ -98,14 +101,17 @@ async function startExpress() {
     await bootFiles.initialize(appExpress);
 
     console.log("-> (sys) Loading SWAGAPI middleware done.");
-    
-    
-	//start express	
-    server.listen(app.config.port, function () {
-
-        console.log('=> (sys) ' + app.config.name + ' listening on port ' + app.config.port + " <=");
-		app.config.host = server.address().address;
-    });
+    appExpress.server = server;
     return appExpress
     
 }
+
+async function listen() {
+    //start express	
+    swagapi.express.server.listen(app.config.port, function () {
+                console.log('=> (sys) ' + app.config.name + ' listening on port ' + app.config.port + " <=");
+                app.config.host = swagapi.express.server.address().address;
+        });
+
+}
+
