@@ -48,6 +48,10 @@ async function boot (apiFile) {
     console.log("(sys) Loading libraries and classes done.");
 
 
+    console.log("(sys) Loading app libs...");
+    if (fs.existsSync(app.config.locations.libs))  app.lib = await requireDir(app.config.locations.libs, { recurse: true });
+    else console.log("(sys) No libs folder on app...")
+
     
     
     if (fs.existsSync(app.config.locations.initFile)) 
