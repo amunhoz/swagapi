@@ -1,6 +1,6 @@
 {
   "name": "swagapi",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "SWAGAPI framework",
   "main": "index.js",
   "author": "A. Munhoz (Brazil)",
