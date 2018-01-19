@@ -30,8 +30,8 @@ async function boot (apiFile) {
     
     app.config = hjson.readFileSync(apiFile);
 
-    let apiDir = path.dirname(apiFile); 
-    app.config.baseDir = path.resolve(apiDir, app.config.baseDir);
+    let apiConfigDir = path.dirname(apiFile); 
+    app.config.baseDir = path.resolve(apiConfigDir, app.config.baseDir);
     app.config.appDir = require('app-root-dir').get();
 
 
