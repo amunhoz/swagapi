@@ -28,8 +28,10 @@ module.exports = {
                 if (routePromise.catch) {
                     routePromise.catch(err => {
                         sysLog.error({message: err.message, stack: err.stack});
-                        let resp = {error: {code:  "err_async_express_general", title: "Erro geral express async", details:{message: err.message, stack: err.stack} }}
-                        res.status(500).send(resp);
+                        if (!res.headersSent) {
+                            let resp = {error: {code:  "err_async_express_general", title: "Erro geral express async", details:{message: err.message, stack: err.stack} }}
+                            res.status(500).send(resp);
+                        }
                     });
                     //routePromise.catch(err => next(err));
                 }
