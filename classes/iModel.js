@@ -253,7 +253,7 @@ iModel.prototype.query = async function (sql, values) {
 const math = require('mathjs');
 iModel.prototype.atomicUpdate = async function (id, field, formula) {
     //formula = "fieldname + 5"
-
+	var result;
     let keepGoing = true;
     let finalValue = false;
     do {
@@ -275,7 +275,7 @@ iModel.prototype.atomicUpdate = async function (id, field, formula) {
         let data = {}
         let formulaVal = math.eval(formula, scope)
         data[field] = formulaVal
-        let result = await this.model.update(query,data)
+        result = await this.model.update(query,data)
         if (result[0]) {
             finalValue = formulaVal
             keepGoing = false
