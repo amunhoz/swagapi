@@ -1,6 +1,7 @@
 ﻿var waterline = require('waterline');
 var path = require('path');
 var fs = require('fs');
+const hjson = require('hjsonfile');
 
 module.exports = {
     name: "waterline",
@@ -15,9 +16,20 @@ module.exports = {
         
 
         var orm = new waterline();
-        let config = require(app.config.locations.connections); //ERROR
+        var config 
+        if (path.extname(app.config.locations.connections) == "js") {
+            config = require(app.config.locations.connections); //ERROR
+        } else {
+            //json config
+            config = {adapters:{}, connections:{}}
+            var configInfo = hjson.readFileSync(app.config.locations.connections);
+            for (var i in configInfo) {
+                config.connections[i] = configInfo[i]
+                config.adapters[configInfo[i].adapter] = require(configInfo[i].adapter)
+            }
 
-
+        }
+        
         let fullPath = app.config.locations.models;
 
         app._models = {};
@@ -32,9 +44,6 @@ module.exports = {
         });
 
         await waitForOrm(orm, config);
-
-
-
 
         app._models = orm.collections;
 

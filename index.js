@@ -81,8 +81,7 @@ async function boot (apiFile) {
 
 async function loadExpress() {
 	const appExpress = express();
-	var server = http.createServer(appExpress);
-    
+	appExpress.server = http.createServer(appExpress);
     swagapi.express = appExpress;
 
 	//load boot services
@@ -105,7 +104,7 @@ async function loadExpress() {
     await bootFiles.initialize(appExpress);
 
     console.log("-> (sys) Loading SWAGAPI middleware done.");
-    appExpress.server = server;
+    
     return appExpress
     
 }
