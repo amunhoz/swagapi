@@ -38,6 +38,7 @@ module.exports = {
             var extension = path.extname(f);
             if (extension == ".js") {
                 let modelInfo = require(path.resolve(fullPath, f));
+                if (process.env.SWAGAPI_ALTER_MODELS) modelInfo.migrate = "alter"
                 let model = waterline.Collection.extend(modelInfo);
                 orm.loadCollection(model);
             }
