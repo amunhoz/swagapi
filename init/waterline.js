@@ -17,7 +17,7 @@ module.exports = {
 
         var orm = new waterline();
         var config 
-        if (path.extname(app.config.locations.connections) == "js") {
+        if (path.extname(app.config.locations.connections) == ".js") {
             config = require(app.config.locations.connections); //ERROR
         } else {
             //json config
