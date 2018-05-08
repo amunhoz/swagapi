@@ -6,9 +6,7 @@ module.exports = {
   name: "swaggerize-express",
   run: async function (appExpress) {
 
-        if (!fs.existsSync(app.config.locations.swaggerFile)){
-            return console.log("       --> Swaggerize NOT loaded, swagger file not found.");
-        }
+        
         if (!fs.existsSync(app.config.locations.routesApi)){
             return console.log("       --> Swaggerize NOT loaded, api routes dir not found.");
         }
@@ -16,7 +14,7 @@ module.exports = {
 		// set options
 		var opt = {
 		  // path of api doc
-        api: require(app.config.locations.swaggerFile),
+          api: app.config.swagger,
 		  // dir of things
           handlers: app.config.locations.routesApi,
           basedir: app.config.baseDir,

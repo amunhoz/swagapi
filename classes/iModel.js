@@ -7,7 +7,7 @@ function iModel(modelName, useEvents) {
 
     if (!app._models[this.modelName]) throw Error("Model not found! (" + modelName + ")");
     this.model = app._models[this.modelName];
-
+    this.fields = JSON.parse(JSON.stringify(this.model.definition))
 }
 
 //==========================================================================================
@@ -206,10 +206,11 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
     let criteria = {};
     let byId = false;
     if ((!!idOrCriteria) && (idOrCriteria.constructor === Object)) {
-        criteria = idOrCriteria.cloneMe();
+        if (criteria.where) criteria = idOrCriteria.where.cloneMe();
+        else criteria = idOrCriteria.cloneMe();
     } else {
-        criteria.where = {};
-        criteria.where[this.model.primaryKey] = idOrCriteria;
+        criteria = {};
+        criteria[this.model.primaryKey] = idOrCriteria;
         byId = true;
     }
 
@@ -223,7 +224,7 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
 
-    var result = await this.model.destroy(criteria.where);
+    var result = await this.model.destroy(criteria);
     
     //emitting event AFTER
     if (swagapi.events && this.useEvents) {

@@ -5,10 +5,9 @@ module.exports = {
   run: async function (appExpress) {
       if (app.config.debug) {
           const swaggerUi = require('swagger-ui-express');
-          const swaggerDocument = require(app.config.locations.swaggerFile);
+          const swaggerDocument = app.config.swagger;
           swaggerDocument.host = app.config.host + ':' + app.config.port;
           appExpress.use('/explorer', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
       }
   }
 }
