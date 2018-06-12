@@ -83,6 +83,8 @@ async function loadExpress() {
 	const appExpress = express();
 	appExpress.server = http.createServer(appExpress);
     swagapi.express = appExpress;
+    //express error handling
+    require('express-async-errors');
 
 	//load boot services
     var bootFiles = new swagapi.lib.bootDir();

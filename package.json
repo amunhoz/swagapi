@@ -1,6 +1,6 @@
 {
   "name": "swagapi",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "description": "SWAGAPI framework",
   "main": "index.js",
   "author": "A. Munhoz (Brazil)",
@@ -17,6 +17,7 @@
     "ejs": "^2.5.7",
     "eventemitter2": "^4.1.0",
     "express": "^4.15.3",
+    "express-async-errors": "^3.0.0",
     "express-session": "^1.15.3",
     "helmet": "^3.8.1",
     "hjsonfile": "0.0.5",

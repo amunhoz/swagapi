@@ -224,7 +224,7 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
 
-    var result = await this.model.destroy(criteria);
+    var result = await this.model.destroy(ctx.criteria);
     
     //emitting event AFTER
     if (swagapi.events && this.useEvents) {
