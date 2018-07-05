@@ -39,6 +39,11 @@ async function boot (apiFile) {
     Object.keys(app.config.locations).forEach(function (key) {
         app.config.locations[key] = path.resolve(app.config.baseDir, app.config.locations[key]);
     });
+    if (app.config.certificates) {
+        Object.keys(app.config.certificates).forEach(function (key) {
+            app.config.certificates[key] = path.resolve(app.config.baseDir, app.config.certificates[key]);
+        }); 
+    }
 
     //load libraries
     var requireDir = require('require-dir');
@@ -80,8 +85,26 @@ async function boot (apiFile) {
 
 
 async function loadExpress() {
+    
+    if (!app.config.protocol) app.config.protocol = "http"
+    var options = {}
+
+    if (app.config.protocol == "https") {
+        try {
+            options = {
+                key: fs.readFileSync(app.config.certificates.keyFile),
+                cert: fs.readFileSync(app.config.certificates.certFile)
+            };
+        } catch (e) {
+            console.log("Error getting certificates in config, serving http")
+            console.log(e)
+            app.config.protocol = "http"
+        }
+    }
+    
+    var protocol = require(app.config.protocol)
 	const appExpress = express();
-	appExpress.server = http.createServer(appExpress);
+	appExpress.server = protocol.createServer(options, appExpress);
     swagapi.express = appExpress;
     //express error handling
     require('express-async-errors');
