@@ -22,23 +22,28 @@ module.exports = {
         } else {
             //json config
             config = {adapters:{}, connections:{}}
-            var configInfo = hjson.readFileSync(app.config.locations.connections);
-            for (var i in configInfo) {
-                config.connections[i] = configInfo[i]
-                config.adapters[configInfo[i].adapter] = require(configInfo[i].adapter)
+            if (app.config.locations.connections) {
+                var configInfo = hjson.readFileSync(app.config.locations.connections);
+                for (var i in configInfo) {
+                    config.connections[i] = configInfo[i]
+                    config.adapters[configInfo[i].adapter] = require(configInfo[i].adapter)
+                }
             }
-
         }
+        
         
         let fullPath = app.config.locations.models;
 
         app._models = {};
         var files = fs.readdirSync(fullPath);
+        if (files.length == 0 ) return console.log("       no Waterline models found... ");
+
         files.forEach(function (f) {
             var extension = path.extname(f);
             if (extension == ".js") {
                 let modelInfo = require(path.resolve(fullPath, f));
                 let connInfo = config.connections[modelInfo.connection]
+                if (!connInfo) throw new Error("Connection '" + modelInfo.connection + "' not found for model '" + modelInfo.identity + "'")
                 if (process.env.SWAGAPI_ALTER_MODELS || connInfo.alter ) modelInfo.migrate = "alter" 
                 let model = waterline.Collection.extend(modelInfo);
                 orm.loadCollection(model);
