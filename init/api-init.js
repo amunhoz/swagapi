@@ -13,8 +13,6 @@ module.exports = {
       if (fs.existsSync(app.config.locations.security)) app.security = await requireDir(app.config.locations.security);
       else console.log("               - (init) No security folder on app...")
       
-      
-      
     
   }
 }

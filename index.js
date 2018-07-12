@@ -78,11 +78,7 @@ async function boot (apiFile) {
     await bootFiles.initialize();
     
     console.log("-> (sys) Loading SWAGAPI init done.");
-   
-   
 }
-
-
 
 async function loadExpress() {
     
@@ -91,12 +87,15 @@ async function loadExpress() {
 
     if (app.config.protocol == "https") {
         try {
+            Object.keys(app.config.certificates).forEach(function (key) {
+                app.config.certificates[key] = path.resolve(app.config.baseDir, app.config.certificates[key]);
+            });
             options = {
                 key: fs.readFileSync(app.config.certificates.keyFile),
                 cert: fs.readFileSync(app.config.certificates.certFile)
             };
         } catch (e) {
-            console.log("Error getting certificates in config, serving http")
+            console.log("Error getting certificates for https in config, serving http")
             console.log(e)
             app.config.protocol = "http"
         }
@@ -106,8 +105,8 @@ async function loadExpress() {
 	const appExpress = express();
 	appExpress.server = protocol.createServer(options, appExpress);
     swagapi.express = appExpress;
-    //express error handling
-    require('express-async-errors');
+    
+    
 
 	//load boot services
     var bootFiles = new swagapi.lib.bootDir();
@@ -130,6 +129,9 @@ async function loadExpress() {
 
     console.log("-> (sys) Loading SWAGAPI middleware done.");
     
+    //express error handling
+    require('express-async-errors');
+
     return appExpress
     
 }
@@ -137,7 +139,7 @@ async function loadExpress() {
 async function listen() {
     //start express	
     swagapi.express.server.listen(app.config.port, function () {
-                console.log('=> (sys) ' + app.config.name + ' listening on port ' + app.config.port + " <=");
+                console.log('=> (sys) ' + app.config.name + ' listening on port ' + app.config.port + " protocol: " + app.config.protocol + "<=");
                 app.config.host = swagapi.express.server.address().address;
         });
 

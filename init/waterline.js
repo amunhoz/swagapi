@@ -27,6 +27,10 @@ module.exports = {
                 for (var i in configInfo) {
                     config.connections[i] = configInfo[i]
                     config.adapters[configInfo[i].adapter] = require(configInfo[i].adapter)
+                    let envkey = "WATERLINE_" + i.toUpperCase() + "_KEY"
+                    if (process.env[envkey]) {
+                        config.connections[i].password = process.env[envkey]
+                    }
                 }
             }
         }
