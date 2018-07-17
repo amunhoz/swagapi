@@ -3,6 +3,7 @@ module.exports = {
     name: "express-error",
     run: async function (appExpress) {
               //commom express errors
+        
         appExpress.use(function (err, req, res, next) {
             if (err) {
                 sysLog.error({message: err.message, stack: err.stack});

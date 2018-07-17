@@ -1,5 +1,3 @@
-const http = require('http');
-const express = require('express');
 const path = require('path');
 const hjson = require('hjsonfile');
 const fs = require('fs');
@@ -9,8 +7,6 @@ exports.start = async function (apiFile) {
     try {
        //start system
        await boot(apiFile)
-       await loadExpress();
-       await listen();
     }
     catch (ex) {
         //error
@@ -30,8 +26,8 @@ async function boot (apiFile) {
     
     app.config = hjson.readFileSync(apiFile);
 
-    let apiConfigDir = path.dirname(apiFile); 
-    app.config.baseDir = path.resolve(apiConfigDir, app.config.baseDir);
+    let apiDir = path.dirname(apiFile); 
+    app.config.baseDir = path.resolve(apiDir, app.config.baseDir);
     app.config.appDir = require('app-root-dir').get();
 
 
@@ -39,11 +35,6 @@ async function boot (apiFile) {
     Object.keys(app.config.locations).forEach(function (key) {
         app.config.locations[key] = path.resolve(app.config.baseDir, app.config.locations[key]);
     });
-    if (app.config.certificates) {
-        Object.keys(app.config.certificates).forEach(function (key) {
-            app.config.certificates[key] = path.resolve(app.config.baseDir, app.config.certificates[key]);
-        }); 
-    }
 
     //load libraries
     var requireDir = require('require-dir');
@@ -76,72 +67,10 @@ async function boot (apiFile) {
         await bootFiles.loadDir(path.resolve(app.config.locations.init));
     
     await bootFiles.initialize();
-    
+
     console.log("-> (sys) Loading SWAGAPI init done.");
+   
+   
 }
 
-async function loadExpress() {
-    
-    if (!app.config.protocol) app.config.protocol = "http"
-    var options = {}
-
-    if (app.config.protocol == "https") {
-        try {
-            Object.keys(app.config.certificates).forEach(function (key) {
-                app.config.certificates[key] = path.resolve(app.config.baseDir, app.config.certificates[key]);
-            });
-            options = {
-                key: fs.readFileSync(app.config.certificates.keyFile),
-                cert: fs.readFileSync(app.config.certificates.certFile)
-            };
-        } catch (e) {
-            console.log("Error getting certificates for https in config, serving http")
-            console.log(e)
-            app.config.protocol = "http"
-        }
-    }
-    
-    var protocol = require(app.config.protocol)
-	const appExpress = express();
-	appExpress.server = protocol.createServer(options, appExpress);
-    swagapi.express = appExpress;
-    
-    
-
-	//load boot services
-    var bootFiles = new swagapi.lib.bootDir();
-    if (fs.existsSync(app.config.locations.middlewareFile)) 
-        app.config.middleware = hjson.readFileSync(app.config.locations.middlewareFile);
-    else 
-        throw new Error("Config file for Middleware not found!")
-
-    console.log("------------------------------------------------------------------------");
-    console.log("(sys) Loading server process");
-    console.log("------------------------------------------------------------------------");
-    
-
-    //load boot services
-    var bootFiles = new swagapi.lib.bootDir();
-    await bootFiles.loadDir(path.resolve(__dirname, "./middleware"), app.config.middleware);
-    if (fs.existsSync(app.config.locations.middleware))
-        await bootFiles.loadDir(path.resolve(app.config.locations.middleware));    
-    await bootFiles.initialize(appExpress);
-
-    console.log("-> (sys) Loading SWAGAPI middleware done.");
-    
-    //express error handling
-    require('express-async-errors');
-
-    return appExpress
-    
-}
-
-async function listen() {
-    //start express	
-    swagapi.express.server.listen(app.config.port, function () {
-                console.log('=> (sys) ' + app.config.name + ' listening on port ' + app.config.port + " protocol: " + app.config.protocol + "<=");
-                app.config.host = swagapi.express.server.address().address;
-        });
-
-}
 
