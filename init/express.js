@@ -50,7 +50,7 @@ module.exports = {
             await bootFiles.loadDir(path.resolve(__dirname, "../middleware"), app.config.middleware);
             if (fs.existsSync(app.config.locations.middleware))
                 await bootFiles.loadDir(path.resolve(app.config.locations.middleware));    
-            await bootFiles.initialize(appExpress);
+            await bootFiles.exec(appExpress);
 
             console.log("-> (sys) Loading SWAGAPI middleware done.");
             
