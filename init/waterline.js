@@ -13,7 +13,9 @@ module.exports = {
         if (!fs.existsSync(app.config.locations.connections)){
             return console.log("       --> Waterline NOT loaded, connections file not found.");
         }
-        
+
+        var options = app.config.init["waterline"].options;
+        if (!options) options = {}
 
         var orm = new waterline();
         var config 
@@ -46,6 +48,7 @@ module.exports = {
             var extension = path.extname(f);
             if (extension == ".js") {
                 let modelInfo = require(path.resolve(fullPath, f));
+                if (options.unixDateMode) unixDateMode(modelInfo)
                 let connInfo = config.connections[modelInfo.connection]
                 if (!connInfo) throw new Error("Connection '" + modelInfo.connection + "' not found for model '" + modelInfo.identity + "'")
                 if (process.env.SWAGAPI_ALTER_MODELS || connInfo.alter ) modelInfo.migrate = "alter" 
@@ -85,4 +88,54 @@ async function waitForOrm(orm, config) {
 
     });
 
+}
+
+function unixDateMode(modelObj) 
+{
+
+    
+    // auto dates - compatibility with new waterline
+    if (modelObj.beforeCreate) {
+        if (!Array.isArray(modelObj.beforeCreate)) {
+            modelObj.beforeCreate = [modelObj.beforeCreate]
+        }       
+    } else {
+        modelObj.beforeCreate = []
+    }
+    modelObj.beforeCreate.push( function (values, cb) {
+        if (values.createdAt && ! Number.isInteger(values.createdAt) ) 
+            values.createdAt = moment().utc().unix();
+        else 
+            values.createdAt = moment().utc().unix();
+
+        if (values.updatedAt && ! Number.isInteger(values.updatedAt) ) 
+            values.updatedAt = moment().utc().unix();
+        else 
+            values.updatedAt = moment().utc().unix();
+        cb();
+    })
+
+    if (modelObj.beforeUpdate) {
+        if (!Array.isArray(modelObj.beforeUpdate)) {
+            modelObj.beforeUpdate = [modelObj.beforeUpdate]
+        }       
+    } else {
+        modelObj.beforeUpdate = []
+    }
+    modelObj.beforeUpdate.push( function (values, cb) {
+        
+        if (values.updatedAt && ! Number.isInteger(values.updatedAt) ) 
+            values.updatedAt = moment().utc().unix();
+        else 
+            values.updatedAt = moment().utc().unix();
+
+        cb();
+    })
+
+    modelObj.autoCreateAt = false
+    modelObj.autoUpdateAt = false
+    modelObj.attributes.createdAt = {"type":  "integer", index:true}
+    modelObj.attributes.updatedAt = {"type":  "integer", index:true}
+
+    return modelObj
 }

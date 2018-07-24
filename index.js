@@ -62,11 +62,11 @@ async function boot (apiFile) {
     
     //load boot services
     var bootFiles = new swagapi.lib.bootDir();
-    await bootFiles.loadDir(path.resolve(__dirname, "./init"), app.config.init);
+    bootFiles.loadDir(path.resolve(__dirname, "./init"), app.config.init);
     if (fs.existsSync(app.config.locations.init))
-        await bootFiles.loadDir(path.resolve(app.config.locations.init));
+        bootFiles.loadDir(path.resolve(app.config.locations.init));
     
-    await bootFiles.initialize();
+    await bootFiles.exec(swagapi);
 
     console.log("-> (sys) Loading SWAGAPI init done.");
    

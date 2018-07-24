@@ -37,6 +37,7 @@
     "queue": "^4.2.1",
     "randomstring": "^1.1.5",
     "recursive-readdir": "^2.2.1",
+    "recursive-readdir-sync": "^1.0.6",
     "request": "^2.81.0",
     "require-dir": "^0.3.2",
     "sails-disk": "^0.10.10",

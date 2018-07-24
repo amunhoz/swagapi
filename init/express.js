@@ -11,7 +11,7 @@ module.exports = {
             if (!app.config.protocol) app.config.protocol = "http"
             var options = {}
 
-            if (app.config.protocol == "https") {
+            if (app.config.protocol == "https" || app.config.protocol == "spdy" ) {
                 try {
                     Object.keys(app.config.certificates).forEach(function (key) {
                         app.config.certificates[key] = path.resolve(app.config.baseDir, app.config.certificates[key]);
