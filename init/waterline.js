@@ -131,9 +131,9 @@ function unixDateMode(modelObj)
 
         cb();
     })
-
-    modelObj.autoCreateAt = false
-    modelObj.autoUpdateAt = false
+    modelObj.schema = true
+    modelObj.autoCreatedAt = false
+    modelObj.autoUpdatedAt = false
     modelObj.attributes.createdAt = {"type":  "integer", index:true}
     modelObj.attributes.updatedAt = {"type":  "integer", index:true}
 
