@@ -2,12 +2,11 @@
 module.exports = {
 	name: "express-basic",
 	  run: async function (appExpress) {
-		  if (app.config.middleware["express-basic"] && app.config.middleware["express-basic"].options)
-			  var options = app.config.middleware["express-basic"].options;
-		  else	
-			  var options = {}
+		
+		  var options = {"body-parser": true, compresion:true, "cookies": true, session: true}
+		  if (app.config.init["express-basic"] && app.config.init["express-basic"].options)
+			  options = app.config.init["express-basic"].options
   
-		  if (!options) options = {"body-parser": true, compresion:true, "cookies": true, session: true}
   
 		  if (options['body-parser']) {
 			  var bodyParser = require('body-parser')
