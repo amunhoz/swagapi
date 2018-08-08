@@ -2,8 +2,6 @@
 module.exports = {
     name: "winston",
     run: async function () {
-
-
         var winston = require('winston');
         var path = require("path");
 

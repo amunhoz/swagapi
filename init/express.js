@@ -11,6 +11,9 @@ module.exports = {
             if (!app.config.protocol) app.config.protocol = "http"
             var options = {}
 
+            var protocol = require(app.config.protocol)
+            var appExpress = express();
+            swagapi.express = appExpress;
             if (app.config.protocol == "https" || app.config.protocol == "spdy" ) {
                 try {
                     Object.keys(app.config.certificates).forEach(function (key) {
@@ -25,13 +28,14 @@ module.exports = {
                     console.log(e)
                     app.config.protocol = "http"
                 }
+            } 
+
+            if (app.config.protocol == "http")
+                appExpress.server = protocol.createServer(appExpress);
+            else {
+                appExpress.server = protocol.createServer(options, appExpress);
             }
             
-            var protocol = require(app.config.protocol)
-            const appExpress = express();
-            appExpress.server = protocol.createServer(options, appExpress);
-            swagapi.express = appExpress;
-                        
 
             //load boot services
             var bootFiles = new swagapi.lib.bootDir();

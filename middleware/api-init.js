@@ -11,10 +11,13 @@ module.exports = {
         next();
     })
 
+    appExpress.disable('x-powered-by');
+
     //preload swagger.json to allow customization
     if (!fs.existsSync(app.config.locations.swaggerFile)){
       return console.log("       --> Swaggerize NOT loaded, swagger file not found.");
     }
+    
     app.config.swagger = require(app.config.locations.swaggerFile);
     
 

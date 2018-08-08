@@ -4,7 +4,6 @@ module.exports = {
     name: "template",
     run: async function (appExpress) {
         
-		
 		var ejs = require('ejs')
 		var templates = {};
 		
