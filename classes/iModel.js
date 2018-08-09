@@ -14,7 +14,7 @@ function iModel(modelName, useEvents) {
 //FIND
 iModel.prototype.find = async function (pcriteria, ctx) {
     //criteria {where: {}, sort:"", limit:1, skip:10}
-    var criteria = pcriteria.cloneMe()
+    var criteria = Object.assign({}, pcriteria)
     if(!ctx) ctx = {};
     //emitting event BEFORE
     if (swagapi.events && this.useEvents) {
@@ -70,7 +70,8 @@ iModel.prototype.find = async function (pcriteria, ctx) {
 
 iModel.prototype.count = async function (pcriteria, ctx) {
     if(!ctx) ctx = {};
-    var criteria = pcriteria.cloneMe()
+    var criteria = Object.assign({}, pcriteria)
+    
     //emitting event BEFORE
     if (swagapi.events && this.useEvents) {
         ctx.model = this.model
@@ -102,7 +103,8 @@ iModel.prototype.findOne = async function (idOrCriteria, ctx) {
     if(!ctx) ctx = {};
     let criteria = {};
     if ((!!idOrCriteria) && (idOrCriteria.constructor === Object)) {
-        criteria = idOrCriteria.cloneMe();;
+        criteria = Object.assign({}, idOrCriteria)
+        
     } else {
         criteria.where = {};
         criteria.where[this.model.primaryKey] = idOrCriteria;
@@ -140,7 +142,7 @@ iModel.prototype.update = async function (idOrCriteria, data, ctx) {
     let criteria = {};
     let byId = false;
     if ((!!idOrCriteria) && (idOrCriteria.constructor === Object)) {
-        criteria = idOrCriteria.cloneMe();;
+        criteria = Object.assign({}, idOrCriteria)
     } else {
         criteria.where = {};
         criteria.where[this.model.primaryKey] = idOrCriteria;
@@ -206,8 +208,8 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
     let criteria = {};
     let byId = false;
     if ((!!idOrCriteria) && (idOrCriteria.constructor === Object)) {
-        if (criteria.where) criteria = idOrCriteria.where.cloneMe();
-        else criteria = idOrCriteria.cloneMe();
+        if (criteria.where) criteria = Object.assign({}, idOrCriteria.where) 
+        else criteria = Object.assign({}, idOrCriteria)
     } else {
         criteria = {};
         criteria[this.model.primaryKey] = idOrCriteria;
