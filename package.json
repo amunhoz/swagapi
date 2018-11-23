@@ -5,7 +5,10 @@
   "main": "index.js",
   "author": "A. Munhoz (Brazil)",
   "homepage": "https://github.com/amunhoz/swagapi",
-  "repository" : { "type" : "git", "url" : "https://github.com/amunhoz/swagapi" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amunhoz/swagapi"
+  },
   "scripts": {
     "start": "node index.js"
   },
@@ -28,10 +31,10 @@
     "lusca": "^1.4.1",
     "matcher": "^1.0.0",
     "mathjs": "^3.19.0",
-    "merge": "^1.2.0",
+    "merge": "^1.2.1",
     "micromatch": "^3.1.5",
     "moment": "^2.20.1",
-    "morgan": "^1.8.2",
+    "morgan": "^1.9.1",
     "mount-routes": "^1.0.8",
     "randomstring": "^1.1.5",
     "recursive-readdir-sync": "^1.0.6",
@@ -45,7 +48,7 @@
     "swagger-ui-express": "^2.0.14",
     "swaggerize-express": "^4.0.5",
     "swaggerize-routes": "^1.0.11",
-    "waterline": "^0.11.11",
+    "waterline": "^0.13.5",
     "winston": "^2.3.1"
   }
 }
