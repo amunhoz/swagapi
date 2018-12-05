@@ -23,15 +23,15 @@ module.exports = {
             config = require(app.config.locations.connections); //ERROR
         } else {
             //json config
-            config = {adapters:{}, connections:{}}
+            config = {adapters:{}, datasources:{}}
             if (app.config.locations.connections) {
                 var configInfo = hjson.readFileSync(app.config.locations.connections);
                 for (var i in configInfo) {
-                    config.connections[i] = configInfo[i]
+                    config.datastores[i] = configInfo[i]
                     config.adapters[configInfo[i].adapter] = require(configInfo[i].adapter)
                     let envkey = "WATERLINE_" + i.toUpperCase() + "_KEY"
                     if (process.env[envkey]) {
-                        config.connections[i].password = process.env[envkey]
+                        config.datastores[i].password = process.env[envkey]
                     }
                 }
             }
@@ -49,11 +49,12 @@ module.exports = {
             if (extension == ".js") {
                 let modelInfo = require(path.resolve(fullPath, f));
                 if (options.unixDateMode) unixDateMode(modelInfo)
-                let connInfo = config.connections[modelInfo.connection]
-                if (!connInfo) throw new Error("Connection '" + modelInfo.connection + "' not found for model '" + modelInfo.identity + "'")
+                let connInfo = config.datastores[modelInfo.datastore]
+                if (!connInfo) throw new Error("Connection '" + modelInfo.datastore + "' not found for model '" + modelInfo.identity + "'")
                 if (process.env.SWAGAPI_ALTER_MODELS || connInfo.alter ) modelInfo.migrate = "alter" 
                 let model = waterline.Collection.extend(modelInfo);
-                orm.loadCollection(model);
+                //orm.loadCollection(model);
+                orm.registerModel(model);
             }
         });
 
@@ -77,7 +78,7 @@ module.exports = {
 async function waitForOrm(orm, config) {
 
     return new Promise((resolve, reject) => {
-
+        //registerDatastore
         orm.initialize(config, function (err, models) {
             if (err) reject(err);
             else {

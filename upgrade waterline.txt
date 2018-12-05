@@ -1,0 +1,34 @@
+-----> in model config: 
+{
+    autocreatedAt : true,
+    autoupdatedAt : true,
+    datastore: 'default',
+    primaryKey: 'id',
+}
+
+
+-----> in field config primary primaryKey
+ "id":  {	
+            "type":  "string"  ,
+            autoMigrations: { unique: true, primaryKey: true, size: 26 }
+        }
+
+
+-----> other fields
+"server": 
+{	
+    "type":  "string",
+    autoMigrations: { 
+        "size": 26,
+        index:true
+    }
+
+},
+
+"clientActivityAt" :
+{
+    "type":  "number" , //unix date
+    autoMigrations: { 
+        index:true
+    }
+},
