@@ -1,4 +1,4 @@
-﻿const swaggerize = require('swaggerize-express-upd');
+﻿const swaggerize = require('swaggerize-express');
 const path = require("path");
 var fs = require('fs');
 
