@@ -1,4 +1,4 @@
-﻿var waterline = require('waterline');
+﻿var Waterline = require('waterline');
 var path = require('path');
 var fs = require('fs');
 const hjson = require('hjsonfile');
@@ -17,19 +17,20 @@ module.exports = {
         var options = app.config.init["waterline"].options;
         if (!options) options = {}
 
-        var orm = new waterline();
+        var waterline = new Waterline();
+
         var config 
         if (path.extname(app.config.locations.connections) == ".js") {
             config = require(app.config.locations.connections); //ERROR
         } else {
             //json config
-            config = {adapters:{}, datasources:{}}
+            config = {adapters:{}, datastores:{}}
             if (app.config.locations.connections) {
                 var configInfo = hjson.readFileSync(app.config.locations.connections);
                 for (var i in configInfo) {
                     config.datastores[i] = configInfo[i]
                     config.adapters[configInfo[i].adapter] = require(configInfo[i].adapter)
-                    let envkey = "WATERLINE_" + i.toUpperCase() + "_KEY"
+                    let envkey = "Waterline_" + i.toUpperCase() + "_KEY"
                     if (process.env[envkey]) {
                         config.datastores[i].password = process.env[envkey]
                     }
@@ -43,46 +44,48 @@ module.exports = {
         app._models = {};
         var files = fs.readdirSync(fullPath);
         if (files.length == 0 ) return console.log("       no Waterline models found... ");
-
+        var modelNames = []
         files.forEach(function (f) {
             var extension = path.extname(f);
             if (extension == ".js") {
                 let modelInfo = require(path.resolve(fullPath, f));
-                if (options.unixDateMode) unixDateMode(modelInfo)
+                //if (options.unixDateMode) unixDateMode(modelInfo)
                 let connInfo = config.datastores[modelInfo.datastore]
                 if (!connInfo) throw new Error("Connection '" + modelInfo.datastore + "' not found for model '" + modelInfo.identity + "'")
                 if (process.env.SWAGAPI_ALTER_MODELS || connInfo.alter ) modelInfo.migrate = "alter" 
-                let model = waterline.Collection.extend(modelInfo);
-                //orm.loadCollection(model);
-                orm.registerModel(model);
+                let model = Waterline.Collection.extend(modelInfo);
+                //waterline.loadCollection(model);
+                waterline.registerModel(model);
+                modelNames.push(modelInfo.identity)
             }
         });
 
-        await waitForOrm(orm, config);
+        var orm = await waitForwaterline(waterline, config);
 
         app._models = orm.collections;
 
-        //creating model interfaces
         app.models = {};
         for (item in app._models) {
             app.models[item] = new swagapi.classes.iModel(item);
         }
         
-        swagapi.waterline = orm;
+        swagapi.orm = orm;
+        swagapi.waterline = waterline;
+
 
     }
 };
 
 
 
-async function waitForOrm(orm, config) {
+async function waitForwaterline(waterline, config) {
 
     return new Promise((resolve, reject) => {
         //registerDatastore
-        orm.initialize(config, function (err, models) {
+        waterline.initialize(config, function (err, orm) {
             if (err) reject(err);
             else {
-                resolve()
+                resolve(orm)
                 console.log("       Waterline full loaded.");
             }
         });
@@ -95,7 +98,7 @@ function unixDateMode(modelObj)
 {
 
     
-    // auto dates - compatibility with new waterline
+    // auto dates - compatibility with new Waterline
     if (modelObj.beforeCreate) {
         if (!Array.isArray(modelObj.beforeCreate)) {
             modelObj.beforeCreate = [modelObj.beforeCreate]
@@ -133,10 +136,10 @@ function unixDateMode(modelObj)
         cb();
     })
     modelObj.schema = true
-    modelObj.autoCreatedAt = false
-    modelObj.autoUpdatedAt = false
-    modelObj.attributes.createdAt = {"type":  "integer", index:true}
-    modelObj.attributes.updatedAt = {"type":  "integer", index:true}
+    //modelObj.autoCreatedAt = false
+    //modelObj.autoUpdatedAt = false
+    modelObj.attributes.createdAt = {"type":  "number", autoCreatedAt: true}
+    modelObj.attributes.updatedAt = {"type":  "number", autoUpdatedAt: true}
 
     return modelObj
 }

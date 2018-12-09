@@ -1,6 +1,6 @@
 {
   "name": "swagapi",
-  "version": "0.3.42",
+  "version": "0.3.45",
   "description": "SWAGAPI framework",
   "main": "index.js",
   "author": "A. Munhoz (Brazil)",
@@ -46,7 +46,7 @@
     "swagger-schema-official": "^2.0.0-d79c205",
     "swagger-ui-express": "^2.0.14",
     "swaggerize-express": "^4.0.5",
-    "waterline": "^0.13.5",
+    "waterline": "^0.13.6",
     "winston": "^2.3.1"
   }
 }

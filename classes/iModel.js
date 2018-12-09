@@ -7,7 +7,7 @@ function iModel(modelName, useEvents) {
 
     if (!app._models[this.modelName]) throw Error("Model not found! (" + modelName + ")");
     this.model = app._models[this.modelName];
-    this.fields = JSON.parse(JSON.stringify(this.model.definition))
+    this.fields = JSON.parse(JSON.stringify(this.model.attributes))
 }
 
 //==========================================================================================
@@ -159,8 +159,10 @@ iModel.prototype.update = async function (idOrCriteria, data, ctx) {
         
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
+    //var model = this.model
+    
+    var result = await this.model.update(criteria).set(data).fetch()
 
-    var result = await this.model.update(criteria, data);
     //emitting event AFTER
     if (swagapi.events && this.useEvents) {
         ctx.result = result;
@@ -188,7 +190,10 @@ iModel.prototype.create = async function (data, ctx) {
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
 
-    var result = await this.model.create(data);
+    //var result = await this.model.create(data);
+    var result = await this.model.create(data).fetch();
+
+    if (!result) result = data
     //emitting event AFTER
     if (swagapi.events && this.useEvents) {
         ctx.result = result
@@ -226,7 +231,7 @@ iModel.prototype.delete = async function (idOrCriteria, ctx) {
         if (ctx.cancel == true) return false;//if any other middleware has ended it
     }
 
-    var result = await this.model.destroy(ctx.criteria);
+    var result = await this.model.destroy(ctx.criteria).fetch()
     
     //emitting event AFTER
     if (swagapi.events && this.useEvents) {
